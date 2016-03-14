@@ -14,12 +14,9 @@
     'use strict';
     var element = document.getElementById('app');
     
-    let string = trkl('');
-    let buttonFoo = trkl('<button onclick="stringAdd(\'foo\')">add foo</button>');
-    let buttonBar = trkl('<button onclick="stringAdd(\'bar\')">add bar</button>');
-    
-    
-    
+    let string = trkl('Hello World');
+    let button = trkl('<button onclick="addToList()">add</button><ul>');
+       
     let models = trkl([
         { prop: trkl('John Doe')},
         { prop: trkl('Amy Doe')},
@@ -28,30 +25,25 @@
     
     let list = function () {
     
-    return  '<button onclick="addToList()">add</button><ul>'+  
+    return  button()+  
             models().map(
                 function(obj, index){
                     return '<li>'+obj.prop()+'</li><button onclick="updateModel('+index+')">test</button>';
                 }
             ).join(" ");
             +'</ul>';
-    }
-    
+    }   
     
     let view = trkl.computed(()=> {
-        return '<h1>'+string()+'</h1>'+buttonFoo()+buttonBar()+'<br/>'+list();
+        return '<h1>'+string()+'</h1><br/>'+list();
     });
     
     view.subscribe((newVal, oldVal) => {
         refresh();
     });      
-       
-    function stringAdd(text){
-       string(string()+text); 
-    }
     
     function updateModel(index){
-        models()[index].prop('updaty Doe');
+        models()[index].prop('updated Doe');
     }
     
     function addToList(){
@@ -68,12 +60,8 @@
         element.innerHTML = view();
         console.timeEnd("view");
     }
-    
-    
-    
-
-    
-    string('Hello World');
+      
+    refresh();
     
     
     </script>
