@@ -25,13 +25,14 @@
     
     let list = function () {
     
-    return  button()+  
-            models().map(
-                function(obj, index){
-                    return '<li>'+obj.prop()+'</li><button onclick="updateModel('+index+')">test</button>';
-                }
-            ).join(" ");
-            +'</ul>';
+        return  button()+  
+                models().map(
+                    function(obj, index){
+                        return '<li>'+obj.prop()+'</li><button onclick="updateModel('+index+')">test</button>';
+                    }
+                )
+                .join(" ");
+                +'</ul>';
     }   
     
     let view = trkl.computed(()=> {
