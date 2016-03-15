@@ -4,6 +4,7 @@
     content="HTML Tidy for HTML5 (experimental) for Windows https://github.com/w3c/tidy-html5/tree/c63cc39" />
     <title></title>
     <script type="text/javascript" src="node_modules/trkl/trkl-min.js"></script>
+    <link rel="stylesheet" href="animate.css">
   </head>
   <body>
     <div id="app">
@@ -12,11 +13,17 @@
   
     <script>
     'use strict';
-    var element = document.getElementById('app');
+    let element = document.getElementById('app');
     
     let string = trkl('Hello World');
     let button = trkl('<button onclick="addToList()">add</button><ul>');
-       
+    
+    let modelButton = index => '<button onclick="removeModel('+index+')">X</button>';
+    
+    let randomizeButton = function(index) {
+        return '<button onclick="removeModel('+index+')">X</button>';
+    };
+    
     let models = trkl([
         { prop: trkl('John Doe')},
         { prop: trkl('Amy Doe')},
@@ -28,28 +35,49 @@
         return  button()+  
                 models().map(
                     function(obj, index){
-                        return '<li>'+obj.prop()+'</li><button onclick="updateModel('+index+')">test</button>';
+                        
+                        return '<li id="'+index+'-element" style="transition: opacity 1s;">'+obj.prop()+modelButton(index)+'</li><br/>';
                     }
                 )
                 .join(" ");
                 +'</ul>';
-    }   
+    };
+
+    let style = function() {
+        
+        return  '<style>'
+                    +'background-color:'+'red'
+                +'</style>';
+    
+    };
     
     let view = trkl.computed(()=> {
-        return '<h1>'+string()+'</h1><br/>'+list();
+        return '<h1>'+string()+'</h1><br/>'+list()+style();
     });
     
     view.subscribe((newVal, oldVal) => {
         refresh();
     });      
     
-    function updateModel(index){
-        models()[index].prop('updated Doe');
+    function removeModel(index){
+    
+        var el = document.getElementById(index+'-element');
+        el.style.opacity = 0;
+        
+        var t = wait(1000);
+        
+        t.then(function(){
+            var arr = models();
+            arr.splice(index,1);
+            models(
+                arr
+            );
+        });
     }
     
     function addToList(){
         var arr = models();
-        arr.push({prop: trkl('new doe')});
+        arr.push({prop: trkl('new doe'+Math.random()), born: true});
         models(
             arr
         );
@@ -64,7 +92,16 @@
       
     refresh();
     
+    function wait(ms){ 
+      return new Promise(
+            function(resolve, reject){
+                setTimeout(function(){
+                    resolve();
+                },ms);
+            }
+        );      
+    }
     
-    </script>
     
+    </script> 
 </html>
